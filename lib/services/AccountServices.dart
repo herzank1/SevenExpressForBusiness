@@ -31,7 +31,7 @@ class AccountService {
 
     ApiResponse<bool>?response= await Businesess.logout();
 
-    return response?.data ??false;
+    return response?.isSuccess();
 
   }
 

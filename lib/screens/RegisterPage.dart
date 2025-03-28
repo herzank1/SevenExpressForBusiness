@@ -5,6 +5,7 @@ import 'package:seven_express_api/dto/RequestBodies.dart';
 import 'package:seven_express_api/entities/Business.dart';
 import 'package:seven_express_api/entities/Transaction.dart';
 import 'package:seven_express_api/methods/Businesess.dart';
+import 'package:seven_express_business/widgets/DialogHelper.dart';
 
 class RegisterPage extends StatelessWidget {
   final TextEditingController _usernameController = TextEditingController();
@@ -25,7 +26,7 @@ class RegisterPage extends StatelessWidget {
 
     // Validar si las contraseñas coinciden
     if (password != confirmPassword) {
-      _showErrorDialog(context, "Las contraseñas no coinciden");
+      DialogHelper.showDialogMessage(context,"Error", "Las contraseñas no coinciden");
       return;
     }
 
@@ -38,18 +39,27 @@ class RegisterPage extends StatelessWidget {
       address,
     );
 
-     ApiResponse<Business>? response= await Businesess.register(registerData);
+     ApiResponse<Business> response= await Businesess.register(registerData);
     // Aquí podrías hacer algo con el objeto 'business' si es necesario
     // Por ejemplo, redirigir a otra pantalla
 
-    if (response?.data != null) {
-      _showSuccessDialog(context);
-    } else {
-      _showErrorDialog(
-        context,
+    if (response.isSuccess()) {
+      DialogHelper.showDialogMessage(context,"Exitoso","Se ha registrado el Negocio, tu cuenta esta en aprovacio.");
+      _clearFields();
+      } else {
+      DialogHelper.showDialogMessage(context,"Error",
         "Error al registrar el usuario. Intenta de nuevo.",
       );
     }
+  }
+
+  void _clearFields() {
+    _usernameController.clear();
+    _passwordController.clear();
+    _confirmPasswordController.clear();
+    _businessNameController.clear();
+    _addressController.clear();
+    _phoneNumberController.clear();
   }
 
   @override
@@ -134,49 +144,7 @@ class RegisterPage extends StatelessWidget {
     );
   }
 
-  // Mostrar un diálogo de error
-  void _showErrorDialog(BuildContext context, String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Error"),
-          content: Text(message),
-          actions: <Widget>[
-            TextButton(
-              child: Text("OK"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
 
-  // Mostrar un diálogo de éxito
-  void _showSuccessDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Registro Exitoso"),
-          content: Text("Tu cuenta ha sido registrada con éxito."),
-          actions: <Widget>[
-            TextButton(
-              child: Text("OK"),
-              onPressed: () {
-                Navigator.of(context).pop();
-                // Redirigir a otra página, por ejemplo, a la pantalla de login
-                Navigator.pushReplacementNamed(context, '/login');
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
 
 
   // Función para obtener las direcciones desde la geocodificación

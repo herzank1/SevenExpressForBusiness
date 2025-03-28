@@ -1,23 +1,32 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:seven_express_api/dto/ApiResponse.dart';
 import 'package:seven_express_api/dto/RequestBodies.dart';
 
 import 'package:seven_express_api/entities/Customer.dart';
 import 'package:seven_express_api/entities/Order.dart';
+import 'package:seven_express_api/entities/SystemStatus.dart';
 import 'package:seven_express_api/methods/Businesess.dart';
 import 'package:seven_express_business/widgets/SnackbarHelper.dart';
 
 import '../../services/CustomersService.dart';
 import '../../widgets/SelectCustomerDialog.dart';
+import '../../widgets/ServerStatusWidget.dart';
 
 class NewOrderScreen extends StatefulWidget {
   const NewOrderScreen({Key? key}) : super(key: key);
+
+
 
   @override
   _NewOrderScreenState createState() => _NewOrderScreenState();
 }
 
 class _NewOrderScreenState extends State<NewOrderScreen> {
+
+
+
   bool isPackage = false; // Estado del switch
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController noteController =
@@ -147,7 +156,7 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Container(
-          width: 400, // Ajusta el ancho según tu necesidad
+          width: 450, // Ajusta el ancho según tu necesidad
           padding: EdgeInsets.all(20),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -165,6 +174,10 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                // Agregar el widget de estado del servidor al principio
+                ServerStatusWidget(),
+                SizedBox(height: 25),
+
                 // Switch Tipo de Orden
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -327,4 +340,7 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
       ),
     );
   }
+
+
+
 }

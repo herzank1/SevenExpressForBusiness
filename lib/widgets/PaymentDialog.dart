@@ -42,7 +42,7 @@ class PaymentDialog {
 
       if (response?.data != null && response?.message != null) {
         // Mostrar el snackbar primero
-        SnackbarHelper.showSnackbar(context, response!.message, true);
+        SnackbarHelper.showSnackbar(context, response?.message??'uknow', true);
 
         // Retrasar el cierre del diálogo para dar tiempo al Snackbar
         Future.delayed(Duration(seconds: 2), () {

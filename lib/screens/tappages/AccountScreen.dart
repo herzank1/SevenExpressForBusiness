@@ -117,7 +117,7 @@ class _AccountScreenState extends State<AccountScreen> {
 
   Future<void> _logout() async {
    bool? success = await AccountService.logout(); // Asegúrate de implementar esta función en AccountService
-   if(success!=null && success==true){
+   if(success==true){
      AccountService.clearToken();
      OrdersControl().dispose();
      Navigator.pushReplacement(
