@@ -21,6 +21,11 @@ class AccountService {
     _businessController.add(business); // Emitir el nuevo valor
   }
 
+  static int getId() {
+    return business?.id ?? -1;  // Si 'business.id' es nulo, retorna -1
+  }
+
+
   static void startAutoUpdate() {
     Timer.periodic(const Duration(minutes:1), (timer) async {
       await getAccount();

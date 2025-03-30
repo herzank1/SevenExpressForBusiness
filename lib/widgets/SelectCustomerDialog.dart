@@ -8,7 +8,6 @@ import 'package:seven_express_api/methods/Businesess.dart';
 
 import '../services/CustomersService.dart';
 
-
 class SelectCustomerDialog extends StatefulWidget {
   final TextEditingController nameController;
   final TextEditingController phoneController;
@@ -30,31 +29,33 @@ class SelectCustomerDialog extends StatefulWidget {
 }
 
 class _SelectCustomerDialogState extends State<SelectCustomerDialog> {
-
-  Future<void>_updateCustomer()async{
-
-
+  Future<void> _updateCustomer() async {
     // Crear el Map con los parámetros necesarios
 
     String name = widget.nameController.text;
-    String phoneNumber= widget.phoneController.text;
-    String address=widget.addressController.text;
-    String position=widget.positionController.text;
+    String phoneNumber = widget.phoneController.text;
+    String address = widget.addressController.text;
+    String position = widget.positionController.text;
 
-    Map<String, dynamic> customerParams =  BodiesForBusiness.createOrUpdateCustomer(name, address, phoneNumber, position);
-
+    Map<String, dynamic> customerParams =
+        BodiesForBusiness.createOrUpdateCustomer(
+          name,
+          address,
+          phoneNumber,
+          position,
+        );
 
     try {
       // Llamar a la función para crear o actualizar el cliente
-    ApiResponse<Customer>?response= await Businesess.createOrUpdateCustomer(customerParams);
-    Customer? updatedCustomer = response?.data;
+      ApiResponse<Customer>? response = await Businesess.createOrUpdateCustomer(
+        customerParams,
+      );
+      Customer? updatedCustomer = response?.data;
 
       // Si la actualización fue exitosa, puedes hacer algo con updatedCustomer
       if (updatedCustomer != null) {
         setState(() {
-
           CustomersService.customer = updatedCustomer;
-
 
           widget.nameController.text = updatedCustomer.name;
           widget.phoneController.text = updatedCustomer.phoneNumber;
@@ -65,40 +66,37 @@ class _SelectCustomerDialogState extends State<SelectCustomerDialog> {
     } catch (e) {
       print("Error actualizando el cliente: $e");
     }
+  }
 
+  void selectCustomer() {
+    CustomersService.customer = new Customer(
+      name: widget.nameController.text,
+      address: widget.addressController.text,
+      phoneNumber: widget.phoneController.text,
+      position: widget.positionController.text,
+    );
   }
 
   // Función para obtener las direcciones desde la geocodificación
   Future<List<String>> _getSuggestions(String query) async {
-
     ApiResponse<List<String>> list = await Businesess.getSuggestions(query);
     // Retornar la lista si tiene datos, de lo contrario, retornar una lista vacía
     return list.data ?? [];
-
-
   }
-
-
 
   // Función para manejar la selección de una dirección
   Future<void> _onSuggestionSelected(String suggestion) async {
-    
-    
-      // Establecer la dirección en el controlador de la dirección
-      widget.addressController.text = suggestion;
+    // Establecer la dirección en el controlador de la dirección
+    widget.addressController.text = suggestion;
 
-      ApiResponse<String>?response= await Businesess.addressToPosition(suggestion);
-      String? addressToPosition = response?.data;
+    ApiResponse<String>? response = await Businesess.addressToPosition(
+      suggestion,
+    );
+    String? addressToPosition = response?.data;
 
-      // Establecer las coordenadas en el controlador de posición
-      widget.positionController.text = addressToPosition!;
-    
+    // Establecer las coordenadas en el controlador de posición
+    widget.positionController.text = addressToPosition!;
   }
-
-
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -140,9 +138,7 @@ class _SelectCustomerDialogState extends State<SelectCustomerDialog> {
             ),
             suggestionsCallback: _getSuggestions,
             itemBuilder: (context, suggestion) {
-              return ListTile(
-                title: Text(suggestion),
-              );
+              return ListTile(title: Text(suggestion));
             },
             onSuggestionSelected: _onSuggestionSelected,
           ),
@@ -151,14 +147,17 @@ class _SelectCustomerDialogState extends State<SelectCustomerDialog> {
             controller: widget.positionController,
             decoration: InputDecoration(
               labelText: "Posición",
-              enabled: false,  // Este campo es solo para mostrar las coordenadas
+              enabled: false, // Este campo es solo para mostrar las coordenadas
             ),
           ),
         ],
       ),
       actions: [
         TextButton(
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () {
+            selectCustomer();
+            Navigator.of(context).pop();
+          },
           child: Text("OK"),
         ),
         ElevatedButton(

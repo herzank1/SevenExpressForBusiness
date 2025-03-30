@@ -17,16 +17,11 @@ import '../../widgets/ServerStatusWidget.dart';
 class NewOrderScreen extends StatefulWidget {
   const NewOrderScreen({Key? key}) : super(key: key);
 
-
-
   @override
   _NewOrderScreenState createState() => _NewOrderScreenState();
 }
 
 class _NewOrderScreenState extends State<NewOrderScreen> {
-
-
-
   bool isPackage = false; // Estado del switch
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController noteController =
@@ -106,8 +101,11 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
     Order? sent = response?.data;
 
     if (sent != null) {
-
-      SnackbarHelper.showSnackbar(context, "Orden enviada con éxito: ${sent.id}", true);
+      SnackbarHelper.showSnackbar(
+        context,
+        "Orden enviada con éxito: ${sent.id}",
+        true,
+      );
       _clearFields();
     } else {
       SnackbarHelper.showSnackbar(context, "Error al enviar la orden.", false);
@@ -340,7 +338,4 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
       ),
     );
   }
-
-
-
 }

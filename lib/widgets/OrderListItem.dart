@@ -4,6 +4,7 @@ import 'package:seven_express_api/entities/Customer.dart';
 import 'package:seven_express_api/entities/Order.dart';
 import 'package:seven_express_api/methods/Businesess.dart';
 import '../services/OrdersControl.dart';
+import 'OrderDetailModal.dart';
 
 class OrderListItem extends StatelessWidget {
   final Order order;
@@ -44,7 +45,10 @@ class OrderListItem extends StatelessWidget {
                     SizedBox(height: 4),
                     Text(
                       order.delivery!.name,
-                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                   ],
@@ -59,13 +63,22 @@ class OrderListItem extends StatelessWidget {
                   child: FloatingActionButton(
                     onPressed: () => setReady(),
                     child: Icon(Icons.check, color: Colors.white),
-                    backgroundColor: Colors.green, // Puedes cambiar el color según tu preferencia
+                    backgroundColor: Colors.green,
+                    // Puedes cambiar el color según tu preferencia
                     mini: true, // Hace el botón más pequeño
                   ),
                 ),
               ),
-
             ],
+            IconButton(
+              icon: Icon(Icons.more_vert), // Icono de tres puntos
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => OrderDetailModal(order: order),
+                );
+              },
+            ),
           ],
         ),
         onTap: () {
@@ -75,12 +88,9 @@ class OrderListItem extends StatelessWidget {
     );
   }
 
-
-
-
   void cancelPickup() {
     print('Marcado como llegado al negocio');
-  //  Deliveries.changeOrderStatus(order.id,null,UserIndication.ARRIVED_TO_BUSINESS.name,null,null);
+    //  Deliveries.changeOrderStatus(order.id,null,UserIndication.ARRIVED_TO_BUSINESS.name,null,null);
     OrdersControl().refresh();
   }
 
@@ -91,7 +101,6 @@ class OrderListItem extends StatelessWidget {
     Map<String, dynamic> orderStatusParams = {
       'orderId': order.id,
       'newStatus': OrderStatus.LISTO.name,
-
     };
 
     // Llamar a changeOrderStatus con el Map
@@ -100,7 +109,6 @@ class OrderListItem extends StatelessWidget {
     // Actualizar la lista de órdenes
     OrdersControl().refresh();
   }
-
 }
 
 extension on Customer {
